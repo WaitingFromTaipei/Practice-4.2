@@ -1,9 +1,20 @@
+---
+title: "Practice-4.2"
+author: "Wei-Ting Sun"
+date: "2024-10-28"
+output: html_document
+---
+I made 2 graph to visualize the trend in `rairuoho` data.
+
+### Data manipulation
+modified from Pratice 2.3  
+```{r, warning=FALSE, message=FALSE}
 rairuoho<-read.table('https://www.dipintothereef.com/uploads/3/7/3/5/37359245/rairuoho.txt',header=T, sep="\t", dec='.')
 library("ggplot2")
 library("dplyr")
 library("tidyr")
 library("ggthemes")
-
+library("stringr")
 
 rairuoho1 <- dplyr::select(rairuoho, -row, -column)
 rairuoho1$treatment<-ifelse(rairuoho1$treatment=='nutrient', 'enriched', 'water')
@@ -12,9 +23,11 @@ rairuoho1 <- rairuoho1 %>%
   pivot_longer(day3:day8, names_to='day', values_to='length')
 
 rairuoho1 <- rairuoho1 %>% mutate(day = as.integer(str_replace(day, "day", "")))
+```
 
-# Trend of growth length with Number of Days
 
+### Trend of growth length with Number of Days
+```{r, warning=FALSE, message=FALSE}
 gg1 <- ggplot(data=rairuoho1,
                 aes(x = day, y = length, color = treatment, shape = bed))
 
@@ -28,9 +41,11 @@ plot1
 
 ggsave(plot1,filename = "outputs/Plot1.pdf",width = 15,
        height = 15,units = "cm")
+```
 
-# Box plots of final germination number under different treatments
 
+### Box plots of final germination number under different treatments
+```{r, warning=FALSE, message=FALSE}
 gg2 <- ggplot(data=rairuoho, aes(x = treatment, y = day8, fill = treatment))
 
 plot2 <- gg2 + geom_boxplot() +
@@ -43,3 +58,4 @@ plot2
 
 ggsave(plot2,filename = "outputs/Plot2.pdf",width = 15,
        height = 15,units = "cm")
+```
